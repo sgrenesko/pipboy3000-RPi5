@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import os
 
 class ImageSwitcher(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -7,13 +8,14 @@ class ImageSwitcher(tk.Tk):
         
         self.title("Pip-Boy 3000")
         
-        #Initial image and index setup
+        # Initial image and index setup
         self.current_image_index = 0
-        self.images = ["pipboy_gif.gif", "apparel.png","data.png", "map.png","radio.png","strength.png","perception.png"]
+        self.image_folder = "images"
+        self.images = os.listdir(self.image_folder)
         
         self.load_images()
         
-        #Get the maximum dimensions of all images
+        # Get the maximum dimensions of all images
         max_width = max(max(img.width() for img in img_list) for img_list in self.image_objects)
         max_height = max(max(img.height() for img in img_list) for img_list in self.image_objects)
         
@@ -22,30 +24,31 @@ class ImageSwitcher(tk.Tk):
         self.image_label.pack()
         self.image_label.config(image=self.image_objects[self.current_image_index][0])
         
-        #Start the animation
+        # Start the animation
         self.animate()
         
-        #Bind mouse scroll to switch between image1 and image2 and bind left mouse click to switch image on specific areas
+        # Bind mouse scroll to switch between image1 and image2 and bind left mouse click to switch image on specific areas
         self.image_label.bind("<MouseWheel>", self.on_scroll)
         self.image_label.bind("<Button-1>", self.on_click)
         
-    #Loads images, and if a .gif, loads and animates
+    # Loads images, and if a .gif, loads and animates
     def load_images(self):
         self.image_objects = []
-        for img_path in self.images:
+        for img_file in self.images:
+            img_path = os.path.join(self.image_folder, img_file)
             if img_path.lower().endswith('.gif'):
                 gif = Image.open(img_path)
                 frames = []
                 try:
                     while True:
-                        frame = ImageTk.PhotoImage(gif.copy().resize((1200, 675)))  #Dimension of initial gif for uniformity
+                        frame = ImageTk.PhotoImage(gif.copy().resize((1200, 675)))  # Dimension of initial gif for uniformity
                         frames.append(frame)
                         gif.seek(len(frames))  
                 except EOFError:
                     pass 
                 self.image_objects.append(frames)
             else:
-                #Load static image
+                # Load static image
                 img = Image.open(img_path)
                 img_resized = img.resize((1200, 675))
                 self.image_objects.append([ImageTk.PhotoImage(img_resized)])
