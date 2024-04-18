@@ -9,7 +9,7 @@ class ImageSwitcher(tk.Tk):
         
         #Initial image and index setup
         self.current_image_index = 0
-        self.images = ["image1.gif", "image2.png", "image3.png", "image4.png"]
+        self.images = ["pipboy_gif.gif", "apparel.png","data.png", "map.png","radio.png","strength.png","perception.png"]
         
         self.load_images()
         
@@ -52,25 +52,26 @@ class ImageSwitcher(tk.Tk):
         
     #Functionality for clicking to switch between sub menus
     def on_click(self, event):
-        #Check if click is within a specific area for image3 and if image2 is current image
-        if event.x > 550 and event.x < 600 and event.y < 100 and event.y > 30 and self.current_image_index == 1:
-            self.current_image_index = 2
+        #Check if click is on the "SPECIAL" tab of the STATS menu or the Strength sub tab then switches accordingly
+        if (event.x > 450 and event.x < 550 and event.y > 65 and event.y < 100 and self.current_image_index == 0) or (event.x > 200 and event.x < 525 and event.y < 200 and event.y > 100 and self.current_image_index == 6):
+            self.current_image_index = 5
             self.image_label.config(image=self.image_objects[self.current_image_index][0])
             self.animate()
-        #Check if click is within a specific area for image4 and if image1 is current image
-        elif event.x > 450 and event.x < 525 and event.y < 100 and event.y > 75 and self.current_image_index == 0:
-            self.current_image_index = 3
+        #Check if click is on the Perception sub tab then switches accordingly
+        elif event.x > 200 and event.x < 700 and event.y < 300 and event.y > 200 and self.current_image_index == 5:
+            self.current_image_index = 6
             self.image_label.config(image=self.image_objects[self.current_image_index][0])
             self.animate()
     
     #Fucntionality for scrolling to switch between menus
     def on_scroll(self, event):
-        #Scroll up to switch to image2
+        # Scroll up to switch to the next image
         if event.delta > 0:
-            self.current_image_index = 1
-        #Scroll down to switch to image1
+            self.current_image_index = (self.current_image_index + 1) % 5
+        # Scroll down to switch to the previous image
         else:
-            self.current_image_index = 0 
+            self.current_image_index = (self.current_image_index - 1) % 5
+            
         self.image_label.config(image=self.image_objects[self.current_image_index][0])
         self.animate()
 
