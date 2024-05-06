@@ -11,7 +11,7 @@ class ImageSwitcher(tk.Tk):
         # Initial image and index setup
         self.current_image_index = 0
         self.image_folder = "images"
-        self.images = os.listdir(self.image_folder)
+        self.images = [img for img in os.listdir(self.image_folder) if img.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
         
         self.load_images()
         
@@ -27,7 +27,7 @@ class ImageSwitcher(tk.Tk):
         # Start the animation
         self.animate()
         
-        # Bind mouse scroll to switch between image1 and image2 and bind left mouse click to switch image on specific areas
+        # Bind mouse scroll to switch between images and bind left mouse click to switch image on specific areas
         self.image_label.bind("<MouseWheel>", self.on_scroll)
         self.image_label.bind("<Button-1>", self.on_click)
         
@@ -53,20 +53,28 @@ class ImageSwitcher(tk.Tk):
                 img_resized = img.resize((1200, 675))
                 self.image_objects.append([ImageTk.PhotoImage(img_resized)])
         
-    #Functionality for clicking to switch between sub menus
+    # Functionality for clicking to switch between images
     def on_click(self, event):
-        #Check if click is on the "SPECIAL" tab of the STATS menu or the Strength sub tab then switches accordingly
-        if (event.x > 450 and event.x < 550 and event.y > 65 and event.y < 100 and self.current_image_index == 0) or (event.x > 200 and event.x < 525 and event.y < 200 and event.y > 100 and self.current_image_index == 6):
-            self.current_image_index = 5
-            self.image_label.config(image=self.image_objects[self.current_image_index][0])
-            self.animate()
-        #Check if click is on the Perception sub tab then switches accordingly
-        elif event.x > 200 and event.x < 700 and event.y < 300 and event.y > 200 and self.current_image_index == 5:
-            self.current_image_index = 6
-            self.image_label.config(image=self.image_objects[self.current_image_index][0])
-            self.animate()
-    
-    #Fucntionality for scrolling to switch between menus
+        conditions = {
+            0: [(450, 550), (65, 100), 5],
+            5: [(200, 700), (200, 300), 6],
+            6: [(200, 700), (200, 300), 7],
+            7: [(200, 700), (200, 400), 8],
+            8: [(200, 700), (200, 500), 10],
+            10: [(200, 700), (200, 600), 9],
+            9: [(200, 700), (200, 700), 11]
+    }
+
+        condition = conditions.get(self.current_image_index)
+        if condition:
+            x_range, y_range, next_index = condition
+            if x_range[0] < event.x < x_range[1] and y_range[0] < event.y < y_range[1]:
+                self.current_image_index = next_index
+                self.image_label.config(image=self.image_objects[self.current_image_index][0])
+                self.animate()
+
+        
+    # Functionality for scrolling to switch between images
     def on_scroll(self, event):
         # Scroll up to switch to the next image
         if event.delta > 0:
@@ -78,7 +86,7 @@ class ImageSwitcher(tk.Tk):
         self.image_label.config(image=self.image_objects[self.current_image_index][0])
         self.animate()
 
-    #gif animation functionality
+    # GIF animation functionality
     def animate(self, frame=0):
         if len(self.image_objects[self.current_image_index]) > 1:
             frame %= len(self.image_objects[self.current_image_index])
@@ -88,7 +96,7 @@ class ImageSwitcher(tk.Tk):
         else:
             self.after(100, self.animate)
 
-#Loops program indefinitely
+# Loops program indefinitely
 if __name__ == "__main__":
     app = ImageSwitcher()
     app.mainloop()
