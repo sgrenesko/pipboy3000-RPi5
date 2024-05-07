@@ -55,23 +55,31 @@ class ImageSwitcher(tk.Tk):
         
     # Functionality for clicking to switch between images
     def on_click(self, event):
-        conditions = {
-            0: [(450, 550), (65, 100), 5],
-            5: [(200, 700), (200, 300), 6],
-            6: [(200, 700), (200, 300), 7],
-            7: [(200, 700), (200, 400), 8],
-            8: [(200, 700), (200, 500), 10],
-            10: [(200, 700), (200, 600), 9],
-            9: [(200, 700), (200, 700), 11]
-    }
+        x, y = event.x, event.y
+        if 450 < x < 550 and 65 < y < 100 and self.current_image_index == 0:
+            self.current_image_index = 5
+        elif 200 < x < 300 and 65 < y < 100 and 4 < self.current_image_index < 12:
+            self.current_image_index = 0
+        elif 4 < self.current_image_index < 12 and 700 > x > 200:
+            if 100 < y < 200:
+                self.current_image_index = 5
+            elif 190 < y < 225:
+                self.current_image_index = 6
+            elif 230 < y < 265:
+                self.current_image_index = 7
+            elif 270 < y < 305:
+                self.current_image_index = 8
+            elif 310 < y < 345:
+                self.current_image_index = 10
+            elif 350 < y < 385:
+                self.current_image_index = 9
+            elif 390 < y < 425:
+                self.current_image_index = 11
+        elif 575 < x < 650 and 65 < y < 100 and self.current_image_index == 1:
+            self.current_image_index = 12
 
-        condition = conditions.get(self.current_image_index)
-        if condition:
-            x_range, y_range, next_index = condition
-            if x_range[0] < event.x < x_range[1] and y_range[0] < event.y < y_range[1]:
-                self.current_image_index = next_index
-                self.image_label.config(image=self.image_objects[self.current_image_index][0])
-                self.animate()
+        self.image_label.config(image=self.image_objects[self.current_image_index][0])
+        self.animate()
 
         
     # Functionality for scrolling to switch between images
