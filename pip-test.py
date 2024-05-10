@@ -56,28 +56,34 @@ class ImageSwitcher(tk.Tk):
     # Functionality for clicking to switch between images
     def on_click(self, event):
         x, y = event.x, event.y
+        
+        # Moving from DATA tab to SPECIAL submenu, and switching between the SPECIAL stats
         if 450 < x < 550 and 65 < y < 100 and self.current_image_index == 0:
             self.current_image_index = 5
         elif 200 < x < 300 and 65 < y < 100 and 4 < self.current_image_index < 12:
             self.current_image_index = 0
         elif 4 < self.current_image_index < 12 and 700 > x > 200:
             if 100 < y < 200:
-                self.current_image_index = 5
+                self.current_image_index = 5 # Strength
             elif 190 < y < 225:
-                self.current_image_index = 6
+                self.current_image_index = 6 # Perception
             elif 230 < y < 265:
-                self.current_image_index = 7
+                self.current_image_index = 7 # Endurance
             elif 270 < y < 305:
-                self.current_image_index = 8
+                self.current_image_index = 8 # Charisma
             elif 310 < y < 345:
-                self.current_image_index = 10
+                self.current_image_index = 10 # Intelligence
             elif 350 < y < 385:
-                self.current_image_index = 9
+                self.current_image_index = 9 # Agility
             elif 390 < y < 425:
-                self.current_image_index = 11
+                self.current_image_index = 11 # Luck
+                
+        # Switches from INVENTORY to various submenus
         elif 575 < x < 650 and 65 < y < 100 and self.current_image_index == 1:
-            self.current_image_index = 12
+            self.current_image_index = 12 # Apparel
+            
 
+        # Displays the currently indexed image
         self.image_label.config(image=self.image_objects[self.current_image_index][0])
         self.animate()
 
